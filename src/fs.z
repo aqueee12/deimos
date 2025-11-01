@@ -1,0 +1,12 @@
+use os
+
+def remove(path: str, keep: bool = False): None
+    if os.path.isfile(path)
+        os.remove(path)
+        <-
+    .
+    for child -> os.listdir(path)
+        remove(child)
+    .
+    if keep; os.rmdir(path);.
+.
