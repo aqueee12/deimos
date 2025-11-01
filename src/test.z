@@ -9,29 +9,19 @@ screen.on!
 screen.init!
 keyboard.init!
 
-<|"initialized"
-
 keyboard.wait_for(KEYBOARD.KEYS.EXE)
-
-<|"clear"
 
 screen.clear_raw!
 
 keyboard.wait_for(KEYBOARD.KEYS.EXE)
 
-<|"set pixel"
-
 for i -> [16<->48]
     screen.set(i, i, SCR.ENUM.PIXEL.BLACK)
 .
-
-<|"write char"
 
 screen.write_char(0 , 0, "A", SCR.ENUM.PIXEL.BLACK , font.vcr_osd_mono)
 screen.write_char(12, 0, "A", SCR.ENUM.PIXEL.DARK  , font.vcr_osd_mono)
 screen.write_char(24, 0, "A", SCR.ENUM.PIXEL.BRIGHT, font.vcr_osd_mono)
 screen.write_char(36, 0, "A", SCR.ENUM.PIXEL.WHITE , font.vcr_osd_mono)
-
-<|"done"
 
 screen.apply!
