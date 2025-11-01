@@ -18,17 +18,6 @@ for i -> [16<->48]
     screen.set(i, i, SCR.ENUM.PIXEL.BLACK)
 .
 
-screen.write_char(0 , 0 , "A", SCR.ENUM.PIXEL.BLACK , font.vcr_osd_mono)
-screen.write_char(12, 0 , "A", SCR.ENUM.PIXEL.DARK  , font.vcr_osd_mono)
-screen.write_char(24, 0 , "A", SCR.ENUM.PIXEL.BRIGHT, font.vcr_osd_mono)
-screen.write_char(36, 0 , "A", SCR.ENUM.PIXEL.WHITE , font.vcr_osd_mono)
-screen.write_char(0 , 16, "A", SCR.ENUM.PIXEL.BLACK , font.mojangles)
-screen.write_char(6 , 16, "A", SCR.ENUM.PIXEL.DARK  , font.mojangles)
-screen.write_char(12, 16, "A", SCR.ENUM.PIXEL.BRIGHT, font.mojangles)
-screen.write_char(18, 16, "A", SCR.ENUM.PIXEL.WHITE , font.mojangles)
-screen.write_char(0 , 26, "A", SCR.ENUM.PIXEL.BLACK , font.miniwi)
-screen.write_char(4 , 26, "A", SCR.ENUM.PIXEL.DARK  , font.miniwi)
-screen.write_char(8 , 26, "A", SCR.ENUM.PIXEL.BRIGHT, font.miniwi)
-screen.write_char(12, 26, "A", SCR.ENUM.PIXEL.WHITE , font.miniwi)
+screen.write("HELLO WORLD", 0, 0 , SCR.ENUM.PIXEL.BLACK , font.miniwi)
 
 screen.apply!
