@@ -1,6 +1,9 @@
 mpremote exec """
+print("Importing fs")
 import fs
-fs.remove(".", keep=True)
+print("Removing /")
+fs.remove("/", keep=True)
+print("Done")
 """
 
 mpremote cp -r bin/* :/
