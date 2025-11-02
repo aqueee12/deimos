@@ -50,6 +50,9 @@ def main
             .elif   key == KEYBOARD.KEYS.SUBTRACT   ; buf += "-";
             .elif   key == KEYBOARD.KEYS.MULTIPLY   ; buf += "*";
             .elif   key == KEYBOARD.KEYS.DIVIDE     ; buf += "/";
+            .elif   key == KEYBOARD.KEYS.POWER      ; buf += "^";
+            .elif   key == KEYBOARD.KEYS.POWER_2    ; buf += "^2";
+            .elif   key == KEYBOARD.KEYS.POWER_10   ; buf += "*10^";
             .elif   key == KEYBOARD.KEYS.LPAREN     ; buf += "(";
             .elif   key == KEYBOARD.KEYS.RPAREN     ; buf += ")";
             .
