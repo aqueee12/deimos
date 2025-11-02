@@ -69,8 +69,8 @@ try
                     app.main!
                 .catch Exception = e
                     screen.clear!
-                    screen.write("Tripped and fell", 0, 0, SCR.ENUM.PIXEL.BLACK, font.classwiz_cw)
-                    screen.write(e?.__name__ .. ":\n" .. e as str, 0, 14, SCR.ENUM.PIXEL.BLACK, font.miniwi)
+                    screen.write(e?.__name__, 0, 0, SCR.ENUM.PIXEL.BLACK, font.classwiz_cw)
+                    screen.write(e as str, 0, 14, SCR.ENUM.PIXEL.BLACK, font.miniwi)
                     screen.apply!
                     raise e
                 .
