@@ -8,6 +8,11 @@ use sys
 use os
 use ui
 
+class DebugInterrupt from Exception;;.
+
+=== debug sleep
+utime.sleep(1)
+
 def choose(items: list(str)): int
     screen.clear!
 
@@ -52,27 +57,36 @@ keyboard.init!
 scr = ui.Screen!
 
 scr \
-    + (test1 := ui.Label(0,  0, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", SCR.ENUM.PIXEL.BLACK, font.miniwi)) \
-    + (test1 := ui.Label(2, 10, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", SCR.ENUM.PIXEL.BLACK, font.miniwi)) \
-    + (test2 := ui.Label(5, 20, "ABCDEF", SCR.ENUM.PIXEL.BLACK, font.classwiz_cw)) \
-    + (test3 := ui.Label(0, 40, "ABCDEF", SCR.ENUM.PIXEL.BLACK, font.classwiz_cw))
+    + (test1 := ui.Label(2, 50, "ABCDEF", SCR.ENUM.PIXEL.BLACK, font.miniwi)) \
+    + (test2 := ui.Label(0, 0, "abcdefghijklmnopq\nrstuvwxyz\n     w", SCR.ENUM.PIXEL.BLACK, font.classwiz_cw))
 
-while True
-    screen.clear!
-    scr.render!
-    screen.apply!
-    key = keyboard.get_next!
-    if key == KEYBOARD.KEYS.SETTINGS
-        c = choose(["Power", "Debug"])
-        if c == 0
-            c = choose(["Restart", "Reboot"])
+try
+    while True
+        screen.clear!
+        scr.render!
+        for byte -> {->SCR.WIDTH_B}
+            if byte % 2; screen.set_byte(byte*8, 30, SCR.ENUM.PIXEL.DARK);.
+        .
+        screen.apply!
+        key = keyboard.get_next!
+        if key == KEYBOARD.KEYS.SETTINGS
+            c = choose(["Power", "Debug"])
             if c == 0
-                machine.soft_reset!
+                c = choose(["Restart", "Reboot"])
+                if c == 0
+                    machine.soft_reset!
+                .elif c == 1
+                    machine.reset!
+                .
             .elif c == 1
-                machine.reset!
+                screen.clear!
+                screen.write("Debug mode", 0, 0, SCR.ENUM.PIXEL.BLACK, font.classwiz_cw)
+                screen.write("Control has been redirected to USB", 0, 14, SCR.ENUM.PIXEL.BLACK, font.miniwi)
+                screen.apply!
+                raise DebugInterrupt("Returning to REPL")
             .
-        .elif c == 1
-            raise KeyboardInterrupt("returning to REPL")
         .
     .
+.catch DebugInterrupt = e
+    <|"DEBUG: "..(e as str)
 .
