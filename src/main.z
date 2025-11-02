@@ -26,12 +26,11 @@ scr = ui.Screen!
 
 scr \
     + (title    := ui.Label(0, 0, "Welcome to Deimos", SCR.ENUM.PIXEL.BLACK, font.classwiz_cw)) \
-    + (desc     := ui.Label(0, 14, \
-        "This OS is built on PicoEASE, a library that's\n"+\
-        "used to access the calculator's debug interface.\n"+\
-        "This allows the pico to access internal memory\n"+\
-        "addresses that are mapped to external devices\n"+\
-        "like the screen and the keyboard.", \
+    + (desc     := ui.Label(0, 20, \
+        "Press HOME for a list of apps.\n"+\
+        "\n"+\
+        "Go to https://github.com/mgismissing/deimos for\n"+\
+        "more info about this project.", \
     SCR.ENUM.PIXEL.BLACK, font.miniwi))
 
 applist = [=]
