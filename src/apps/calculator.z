@@ -150,6 +150,7 @@ def main
         while keyboard.pressed_any!;;.
         key = keyboard.get_next!
         chr = None
+        mov = 0
         if          key == KEYBOARD.KEYS.SHIFT      ; shift = not $;
         .elif shift
             shift = False
@@ -159,9 +160,9 @@ def main
                 pos = #buf
             .elif   key == KEYBOARD.KEYS.LPAREN     ; chr = "=";
             .elif   key == KEYBOARD.KEYS.MULTIPLY   ; chr = "%";
-            .elif   key == KEYBOARD.KEYS.SIN        ; chr = "\x02(";
-            .elif   key == KEYBOARD.KEYS.COS        ; chr = "\x04(";
-            .elif   key == KEYBOARD.KEYS.TAN        ; chr = "\x06(";
+            .elif   key == KEYBOARD.KEYS.SIN        ; chr = "\x02()"; mov--;
+            .elif   key == KEYBOARD.KEYS.COS        ; chr = "\x04()"; mov--;
+            .elif   key == KEYBOARD.KEYS.TAN        ; chr = "\x06()"; mov--;
             .
         .else
             if      key == KEYBOARD.KEYS.BKSPACE
@@ -205,20 +206,19 @@ def main
             .elif   key == KEYBOARD.KEYS.DIVIDE     ; chr = "/";
             .elif   key == KEYBOARD.KEYS.POWER      ; chr = "^";
             .elif   key == KEYBOARD.KEYS.POWER_2    ; chr = "^2";
-            .elif   key == KEYBOARD.KEYS.POWER_10   ; chr = "*10^(";
-            .elif   key == KEYBOARD.KEYS.SIN        ; chr = "\x01(";
-            .elif   key == KEYBOARD.KEYS.COS        ; chr = "\x03(";
-            .elif   key == KEYBOARD.KEYS.TAN        ; chr = "\x05(";
-            .elif   key == KEYBOARD.KEYS.SQRT       ; chr = "\x07(";
-            .elif   key == KEYBOARD.KEYS.LPAREN     ; chr = "(";
+            .elif   key == KEYBOARD.KEYS.POWER_10   ; chr = "*10^()"; mov--;
+            .elif   key == KEYBOARD.KEYS.SIN        ; chr = "\x01()"; mov--;
+            .elif   key == KEYBOARD.KEYS.COS        ; chr = "\x03()"; mov--;
+            .elif   key == KEYBOARD.KEYS.TAN        ; chr = "\x05()"; mov--;
+            .elif   key == KEYBOARD.KEYS.SQRT       ; chr = "\x07()"; mov--;
+            .elif   key == KEYBOARD.KEYS.LPAREN     ; chr = "()"; mov--;
             .elif   key == KEYBOARD.KEYS.RPAREN     ; chr = ")";
             .
         .
         if chr
             buf = buf[:pos] + chr + buf[pos:]
-            pos += #chr
+            pos += #chr+mov
         .
-        buf .= replace("**", "^")
         if pos < 0; pos = 0;.
     .
 .
