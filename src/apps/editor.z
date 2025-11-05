@@ -1,0 +1,11 @@
+use * from cwio
+use * from cwio.const
+use ui
+use os
+
+name = "File Editor"
+
+def main
+    path = ask("/")
+    if 
+.

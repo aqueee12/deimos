@@ -1,4 +1,5 @@
 use * from cwio
+use os
 
 def choose(items: list(str)): int
     screen.clear!
@@ -33,6 +34,10 @@ def choose(items: list(str)): int
             <- -1
         .
     .
+.
+
+def choose_file(start: str = "/")
+    
 .
 
 keypad = [
