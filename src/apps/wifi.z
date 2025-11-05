@@ -24,9 +24,9 @@ statuses = [
 def connect(w: WLAN, ssid: str, psw: str | None): bool
     w.connect(ssid, psw)
 
-    <|"[WIFI] Connecting to \""..ssid.."\" with"..(" password \""..psw.."\"" if psw else "out password")
+    <|"[WIFI] Connecting to \""..ssid.."\""
     screen.clear!
-    screen.write("Connecting to \""..ssid.."\"...\n\nNOTE: This operation will automatically time out\nafter 10 seconds if the AP doesn't reply in that\ntime frame.", 0, 0, SCR.ENUM.PIXEL.BLACK, font.miniwi)
+    screen.write("Connecting to \""..ssid.."\"...\n\nNOTE: This operation will automatically time out\nafter 15 seconds if the AP doesn't reply in that\ntime frame.", 0, 0, SCR.ENUM.PIXEL.BLACK, font.miniwi)
     screen.apply!
     
     start = time.ticks_ms!
@@ -43,11 +43,11 @@ def connect(w: WLAN, ssid: str, psw: str | None): bool
             <-False
         .
 
-        if time.ticks_diff(time.ticks_ms!, start) > 10 * 1000
-            <|"[WIFI] Timed out after 10 seconds"
+        if time.ticks_diff(time.ticks_ms!, start) > 15 * 1000
+            <|"[WIFI] Timed out after 15 seconds"
             screen.clear!
             screen.write("Connection error", 0, 0, SCR.ENUM.PIXEL.BLACK, font.classwiz_cw)
-            screen.write("Timed out after 10 seconds".."\n\nPress [ANY] to continue...", 0, 14, SCR.ENUM.PIXEL.BLACK, font.miniwi)
+            screen.write("Timed out after 15 seconds".."\n\nPress [ANY] to continue...", 0, 14, SCR.ENUM.PIXEL.BLACK, font.miniwi)
             screen.apply!
             keyboard.wait!
             <-False
