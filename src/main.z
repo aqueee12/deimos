@@ -75,7 +75,7 @@ try
                 run_app(apps.all[c])
             .
         .elif key == KEYBOARD.KEYS.TOOLS
-            ui.ask("TYPING TEST")
+            ui.choose_file!
         .
     .
 .catch DebugInterrupt = e
