@@ -1,3 +1,4 @@
 bin
 src/conf/wifi.txt
 src/conf/axios.txt
+*.code-workspace
