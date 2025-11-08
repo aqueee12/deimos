@@ -1,11 +1,13 @@
 use .axios
 use .calculator
+use .editor
 use .tetris
 use .wifi
 
 all = [
     axios,
     calculator,
+    editor,
     tetris,
     wifi,
 ]

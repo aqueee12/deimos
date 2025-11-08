@@ -5,6 +5,23 @@ use os
 
 name = "File Editor"
 
+def printlines(s: str, p: int)
+    page = 0
+    screen.write(s, 0, 0, SCR.ENUM.PIXEL.BLACK, font.miniwi)
+.
+
 def main
-    path = ask("/")
+    file = ui.choose_file!
+    if file == -1; <-;.
+    with open(file, "r") = f
+        buf = f.read!
+    .
+    pos = 0
+
+    while True
+        screen.clear!
+        printlines(buf, pos)
+        screen.apply!
+        keyboard.wait!
+    .
 .
