@@ -48,10 +48,10 @@ def main
 
     refresh = True
     shift = False
+    tools = False
     while True
         totallen, lastlen = printlines(buf, pos, oldpos, writeall=refresh)
         tonext = totallen-lastlen+1
-        <|tonext
         refresh = False
         screen.apply!
         while keyboard.pressed_any!;;.
@@ -81,20 +81,41 @@ def main
             .
             if exit; break;.
             refresh = True
-        .elif shift
+        .elif     key == KB.KEYS.SHIFT      ; shift = True
+        .elif     key == KB.KEYS.TOOLS      ; tools = True
+        .elif shift and not tools
             shift = False
+            tools = False
             if    key == KB.KEYS.LPAREN     ; char = "="
             .elif key == KB.KEYS.RPAREN     ; char = ","
+            .elif key == KB.KEYS.ADD        ; char = "\""
+            .elif key == KB.KEYS.MULTIPLY   ; char = "^"
+            .elif key == KB.KEYS.DIVIDE     ; char = "%"
+            .elif key == KB.KEYS.DOT        ; char = "!"
             .
+        .elif tools and not shift
+            shift = False
+            tools = False
+            if    key == KB.KEYS.RPAREN     ; char = ";"
+            .elif key == KB.KEYS.DOT        ; char = "?"
+            .
+        .elif shift and tools
+            shift = False
+            tools = False
         .else
-            if    key == KB.KEYS.SHIFT      ; shift = True
-            .elif key == KB.KEYS.BKSPACE    ; char = -1
+            if    key == KB.KEYS.BKSPACE    ; char = -1
             .elif key == KB.KEYS.LEFT       ; pos -= (1 if pos > 0 else 0)
             .elif key == KB.KEYS.RIGHT      ; pos += (1 if pos < #buf else 0)
             .elif key == KB.KEYS.UP         ; pos -= (lastlen+1 if pos-(lastlen+1) >= 0 else lastlen)
             .elif key == KB.KEYS.DOWN       ; pos += (tonext if pos+tonext <= #buf else 0)
             .elif key == KB.KEYS.LPAREN     ; char = "("
             .elif key == KB.KEYS.RPAREN     ; char = ")"
+            .elif key == KB.KEYS.ADD        ; char = "+"
+            .elif key == KB.KEYS.SUBTRACT   ; char = "-"
+            .elif key == KB.KEYS.MULTIPLY   ; char = "*"
+            .elif key == KB.KEYS.DIVIDE     ; char = "/"
+            .elif key == KB.KEYS.DOT        ; char = "."
+            .elif key == KB.KEYS.POWER_10   ; char = " "
             .elif key == KB.KEYS.FORMAT     ; char = ui.ask("Insert text")
             .
         .
