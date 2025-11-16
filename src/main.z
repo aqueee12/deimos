@@ -10,6 +10,10 @@ use ui
 use choose from ui
 use res
 use loader
+use wifi
+use wlan from wifi
+use update
+use garbage
 use apps from loader
 
 class DebugInterrupt from Exception;;.
@@ -37,9 +41,9 @@ for app -> apps
     {applist}<-("[LIB] " if hasattr(module, "lib") else "")..module.name
 .
 
-def run_app(app)
+def protected_run(func)
     try
-        loader.run(app)
+        <-func!
     .catch Exception = e
         screen.clear!
         screen.write(e?.__name__, 0, 0, SCR.ENUM.PIXEL.BLACK, font.classwiz_cw)
@@ -49,6 +53,11 @@ def run_app(app)
     .
 .
 
+def run_app(app)
+    def run; loader.run(app);.
+    protected_run(run)
+.
+
 try
     while True
         screen.clear!
@@ -56,15 +65,31 @@ try
         screen.apply!
         key = keyboard.get_next!
         if key == KB.KEYS.SETTINGS
-            c = choose(["Power", "Debug"])
+            c = choose(["Update from OFW repo", "Power", "Debug"])
             if c == 0
+                if (not wlan.active!) or (not wlan.isconnected!); wifi.choose_connect!;.
+                if wlan.active! and wlan.isconnected!
+                    screen.clear!
+                    screen.write("Updating...", 0, 0, SCR.ENUM.PIXEL.BLACK, font.classwiz_cw)
+                    screen.write("OS will be restarted automatically after the\nupdate.", 0, 14, SCR.ENUM.PIXEL.BLACK, font.miniwi)
+                    screen.apply!
+                    protected_run(update.download)
+                    machine.reset!
+                .else
+                    screen.clear!
+                    screen.write("Connection error", 0, 0, SCR.ENUM.PIXEL.BLACK, font.classwiz_cw)
+                    screen.write("A stable Internet connection is required to\nperform updates.", 0, 14, SCR.ENUM.PIXEL.BLACK, font.miniwi)
+                    screen.apply!
+                    keyboard.wait!
+                .
+            .elif c == 1
                 c = choose(["Restart", "Reboot"])
                 if c == 0
                     machine.soft_reset!
                 .elif c == 1
                     machine.reset!
                 .
-            .elif c == 1
+            .elif c == 2
                 screen.clear!
                 screen.write("Debug mode", 0, 0, SCR.ENUM.PIXEL.BLACK, font.classwiz_cw)
                 screen.write("Control has been redirected to USB", 0, 14, SCR.ENUM.PIXEL.BLACK, font.miniwi)
