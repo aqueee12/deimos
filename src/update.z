@@ -1,4 +1,5 @@
-use requests as rq
+use socket
+use ssl
 use tar
 use garbage
 use os
@@ -10,44 +11,59 @@ class INFO
 .
 
 class OFW
-    PROTOCOL = "http"
     DOMAIN = "github.com"
     REPO = "mgismissing/deimos"
 .
 
-def download(ver: str = "latest")
+def get_stream(host: bytes, path: bytes)
     garbage.collect!
-    <|gc.mem_free!
-    url = OFW.PROTOCOL+"://"+OFW.DOMAIN+"/"+OFW.REPO+"/releases"
-    if ver == "latest"
-        url += "/latest/download"
-    .else
-        url += "/download/"+ver
+    addr = socket.getaddrinfo(host, 443)[0][-1]
+    s = socket.socket!
+    s.connect(addr)
+    s = ssl.wrap_socket($)
+
+    s.write(b"GET "+path+b" HTTP/1.0\r\nHost: "+host+b"\r\n\r\n")
+
+    loc = None
+    while True
+        line = s.readline!
+        if line == b"\r\n" or line == b""; break;.
+        if line.startswith(b"Location: "); loc = line.replace(b"Location: ", b"").rstrip(b"\r\n");.
     .
-    url += "/deimos.tar"
-    <|url
-    <|gc.mem_free!
-    r = rq.get(url, stream=True)
-    garbage.collect!
-    <|gc.mem_free!
+
+    if not loc
+        <-s
+    .
+    s.close!
+    loch = loc.split(b"/", 3)[2]
+    loc = b"/"+$.split(b"/", 3)[3]
+    <-get_stream(loch, loc)
+.
+
+def download(ver: str = "latest")
+    url = bytes("/"+OFW.REPO+"/releases", "utf-8")
+    if ver == "latest"
+        url += b"/latest/download"
+    .else
+        url += b"/download/"+bytes(ver, "utf-8")
+    .
+    url += b"/deimos.tar"
+    r = get_stream(bytes(OFW.DOMAIN, "utf-8"), url)
     with open("/deimos.tar", "wb") = f
         i = 0
         while True
-            chunk = r.raw.read(512)
+            chunk = r.read(512)
             if not chunk; break;.
-            <|"Copying chunk "+(i++ as str)
+            <|"[FWUP] Copying chunk "+(i++ as str)
             f.write(chunk)
-            del chunk
-            <|gc.mem_free!
         .
-        <|"Done downloading"
+        <|"[FWUP] Done downloading"
     .
 
-    <|gc.mem_free!
     r.close!
     garbage.collect!
 
-    <|"Extracting tar into /"
+    <|"[FWUP] Extracting tar into /"
     tar.extract("/deimos.tar", "/")
     os.remove("/deimos.tar")
 .
