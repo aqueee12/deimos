@@ -1,8 +1,14 @@
 use * from cwio
 use * from cwio.const
 use fs as _fs
+use support as wifi_support from wifi
 
-class RequireError from Exception;;.
+class Error from Exception;;.
+
+class RequireError from Error;;.
+class UnsupportedError from Error;;.
+
+class EntryPointError from Error;;.
 
 apps = [,]
 for path -> _fs.os.listdir("/apps")
@@ -34,5 +40,29 @@ def require(name: str)
 .
 
 def run(name: str)
-    <-require(name).main!
+    app = require(name)
+    if (not wifi_support) and ("wifi" in getattr(app, "requires", [,]))
+        screen.clear!
+        screen.write("Unsupported app", 0, 0, SCR.ENUM.PIXEL.BLACK, font.classwiz_cw)
+        screen.write("This app requires WiFi, which isn't supported\nby this device.", 0, 14, SCR.ENUM.PIXEL.BLACK, font.miniwi)
+        screen.apply!
+        keyboard.wait!
+        raise UnsupportedError("wifi")
+    .
+    appmain = getattr(app, "main", None)
+    if appmain
+        <-appmain!
+    .
+    lib = hasattr(app, "lib")
+    screen.clear!
+    if lib
+        screen.write("Passive library app", SCR.ENUM.PIXEL.BLACK, font.classwiz_cw)
+        screen.write("This library is only meant to be used by other\napps.", 0, 14, SCR.ENUM.PIXEL.BLACK, font.miniwi)
+    .else
+        screen.write("Missing entry point", SCR.ENUM.PIXEL.BLACK, font.classwiz_cw)
+        screen.write("This application cannot be launched directly.", 0, 14, SCR.ENUM.PIXEL.BLACK, font.miniwi)
+    .
+    screen.apply!
+    keyboard.wait!
+    raise EntryPointError(lib)
 .
